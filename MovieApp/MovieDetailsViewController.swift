@@ -44,7 +44,7 @@ class MovieDetailsViewController: UIViewController {
     private var threePeopleView = [UIStackView]()
     private var peopleLabel = [UILabel]()
     private var jobsLabel = [UILabel]()
-    private var peopleJobsView = [UIView]()
+    private var peopleJobsStackView = [UIStackView]()
     
     private var tmp = [UIView]()
     
@@ -158,7 +158,7 @@ class MovieDetailsViewController: UIViewController {
         overviewText.textColor = .black
         overviewText.font = overviewText.font.withSize(12.5)
         
-        // ovo je napravljena ovako komplicirano cisto iz razloga da se kasnije, kada se ne zna koliko ce biti osoba
+        // ovo je napravljeno ovako komplicirano cisto iz razloga da se kasnije, kada se ne zna koliko ce biti osoba
         // koje su radile na filmu, moze lakse stavljati na ekran
         var people = [Int: String]()
         var jobs = [Int: String]()
@@ -170,6 +170,7 @@ class MovieDetailsViewController: UIViewController {
         jobs[2] = "Producer"
         people[3] = "Atsushi Okui"
         jobs[3] = "Screenplay"
+        // zakomentirani covjek je cisto radi isprobavanja layouta s vise/manje ljudi
 //        people[4] = "Atsushi Okui"
 //        jobs[4] = "Screenplay"
 //        people[5] = "Atsushi Okui"
@@ -191,40 +192,54 @@ class MovieDetailsViewController: UIViewController {
             jobsLabel[i].textColor = .black
             jobsLabel[i].font = jobsLabel[i].font.withSize(12.5)
             
-            peopleJobsView.append(UIView())
-            peopleJobsView[i].addSubview(peopleLabel[i])
-            peopleJobsView[i].addSubview(jobsLabel[i])
+            peopleJobsStackView.append(UIStackView())
+            peopleJobsStackView[i].axis = .vertical
+            peopleJobsStackView[i].alignment = .fill
+            peopleJobsStackView[i].distribution = .fillEqually
+            peopleJobsStackView[i].spacing = 2.5
+            peopleJobsStackView[i].addArrangedSubview(peopleLabel[i])
+            peopleJobsStackView[i].addArrangedSubview(jobsLabel[i])
 
             if (i % 3 == 0) {
                 threePeopleView.append(UIStackView())
                 threePeopleView[i / 3].axis = .horizontal
                 threePeopleView[i / 3].alignment = .fill
                 threePeopleView[i / 3].distribution = .fillEqually
-                threePeopleView[i / 3].addArrangedSubview(peopleJobsView[i])
+                threePeopleView[i / 3].addArrangedSubview(peopleJobsStackView[i])
             } else {
-                threePeopleView[i / 3].addArrangedSubview(peopleJobsView[i])
+                threePeopleView[i / 3].addArrangedSubview(peopleJobsStackView[i])
             }
 
             i = i + 1
         } while (i < people.count)
 
         if (i % 3 == 1) {
-            peopleJobsView.append(UIView())
-            peopleJobsView[i].backgroundColor = .white
-            peopleJobsView.append(UIView())
-            peopleJobsView[i + 1].backgroundColor = .white
-            threePeopleView[i / 3].addArrangedSubview(peopleJobsView[i])
-            threePeopleView[i / 3].addArrangedSubview(peopleJobsView[i + 1])
+            peopleJobsStackView.append(UIStackView())
+            peopleJobsStackView[i].axis = .vertical
+            peopleJobsStackView[i].alignment = .fill
+            peopleJobsStackView[i].distribution = .fillEqually
+            peopleJobsStackView[i].backgroundColor = .white
+            peopleJobsStackView.append(UIStackView())
+            peopleJobsStackView[i + 1].axis = .vertical
+            peopleJobsStackView[i + 1].alignment = .fill
+            peopleJobsStackView[i + 1].distribution = .fillEqually
+            peopleJobsStackView[i + 1].backgroundColor = .white
+            threePeopleView[i / 3].addArrangedSubview(peopleJobsStackView[i])
+            threePeopleView[i / 3].addArrangedSubview(peopleJobsStackView[i + 1])
         } else if (i % 3 == 2) {
-            peopleJobsView.append(UIView())
-            peopleJobsView[i].backgroundColor = .white
-            threePeopleView[i / 3].addArrangedSubview(peopleJobsView[i])
+            peopleJobsStackView.append(UIStackView())
+            peopleJobsStackView[i].axis = .vertical
+            peopleJobsStackView[i].alignment = .fill
+            peopleJobsStackView[i].distribution = .fillEqually
+            peopleJobsStackView[i].backgroundColor = .white
+            threePeopleView[i / 3].addArrangedSubview(peopleJobsStackView[i])
         }
 
         peopleView = UIStackView()
         peopleView.axis = .vertical
         peopleView.alignment = .fill
         peopleView.distribution = .fillEqually
+        peopleView.spacing = 23
 
         i = 0
         repeat {
@@ -242,6 +257,7 @@ class MovieDetailsViewController: UIViewController {
         stackView.axis = .vertical
         stackView.alignment = .fill
         // mozda bolje .fill? ali za sad ne znam kako napraviti da se moze scrollati
+        // mislim da se onda treba promijeniti i movieImageView.contentMode
         stackView.distribution = .fillEqually
         stackView.spacing = 0
         
@@ -404,20 +420,11 @@ class MovieDetailsViewController: UIViewController {
             threePeopleView[i].translatesAutoresizingMaskIntoConstraints = false
             
             repeat {
-                peopleJobsView[j].translatesAutoresizingMaskIntoConstraints = false
+                peopleJobsStackView[j].translatesAutoresizingMaskIntoConstraints = false
                 
                 if (j < peopleLabel.count) {
                     peopleLabel[j].translatesAutoresizingMaskIntoConstraints = false
-                    NSLayoutConstraint.activate([
-                        
-                    ])
-                }
-
-                if (j < jobsLabel.count) {
                     jobsLabel[j].translatesAutoresizingMaskIntoConstraints = false
-                    NSLayoutConstraint.activate([
-                        jobsLabel[j].topAnchor.constraint(equalTo: peopleLabel[j].bottomAnchor, constant: 10)
-                    ])
                 }
 
                 j = j + 1
