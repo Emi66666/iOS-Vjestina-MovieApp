@@ -8,6 +8,13 @@
 import Foundation
 import UIKit
 
+//class BannerView : UIView {
+//
+//    override init(frame: CGRect() {
+//        super.init(frame: view)
+//    }
+//}
+
 class MovieDetailsViewController: UIViewController {
     
     // TODO: view.safeAreaLayout()
@@ -56,8 +63,7 @@ class MovieDetailsViewController: UIViewController {
     
     private func buildViews() {
         movieImage = UIImage(named: "Spirited_Away.jpg")!
-        movieImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
-        movieImageView.image = movieImage
+        movieImageView = UIImageView(image: movieImage)
         movieImageView.contentMode = .scaleAspectFill
         movieImageView.clipsToBounds = true
         movieImageView.layer.opacity = 0.55
@@ -111,9 +117,12 @@ class MovieDetailsViewController: UIViewController {
         movieDateAndPlaceView.addSubview(moviePlace)
         
         movieGenre = UILabel()
+        // TODO: Don't know how to still make movieTime appear if genre is this long
+//        movieGenre.text = "Fantasy, AdventureFantasy, AdventureFantasy, AdventureFantasy, AdventureFantasy, Adventure"
         movieGenre.text = "Fantasy, Adventure"
         movieGenre.textColor = .white
         movieGenre.font = movieGenre.font.withSize(12.5)
+        movieGenre.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         
         movieTime = UILabel()
         movieTime.text = "2h 5m"
@@ -125,14 +134,12 @@ class MovieDetailsViewController: UIViewController {
         movieGenreAndTimeView.addSubview(movieTime)
         
         vectorCircle = UIImage(systemName: "circle.fill")?.withTintColor(.systemGray, renderingMode: .alwaysOriginal)
-        vectorCircleView = UIImageView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
-        vectorCircleView.image = vectorCircle
+        vectorCircleView = UIImageView(image: vectorCircle)
         vectorCircleView.contentMode = .scaleAspectFit
         vectorCircleView.layer.opacity = 0.4
         
         vectorStar = UIImage(systemName: "star")?.withTintColor(.white, renderingMode: .alwaysOriginal)
-        vectorStarView = UIImageView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
-        vectorStarView.image = vectorStar
+        vectorStarView = UIImageView(image: vectorStar)
         vectorStarView.contentMode = .scaleAspectFit
         
         favouriteView = UIView()
@@ -178,6 +185,8 @@ class MovieDetailsViewController: UIViewController {
 //        people[6] = "Atsushi Okui"
 //        jobs[6] = "Screenplay"
         
+        // TODo: maksimalno sest, ali ne moraju doci odmah pa se stavi 6, a ostalo se popunjava s praynim
+        
         var i = 0
         repeat {
 
@@ -185,7 +194,7 @@ class MovieDetailsViewController: UIViewController {
             peopleLabel[i].text = people[i]
             peopleLabel[i].textColor = .black
             peopleLabel[i].font = UIFont.boldSystemFont(ofSize: 12.5)
-            peopleLabel[i].numberOfLines = 0
+//            peopleLabel[i].numberOfLines = 0
 
             jobsLabel.append(UILabel())
             jobsLabel[i].text = jobs[i]
@@ -273,8 +282,8 @@ class MovieDetailsViewController: UIViewController {
         NSLayoutConstraint.activate([
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            stackView.topAnchor.constraint(equalTo: view.topAnchor),
-            stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            stackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
         ])
         
         bannerView.translatesAutoresizingMaskIntoConstraints = false;
@@ -299,82 +308,104 @@ class MovieDetailsViewController: UIViewController {
         movieScore.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             movieScore.leadingAnchor.constraint(equalTo: movieScoreView.leadingAnchor, constant: 30),
-            movieScore.centerYAnchor.constraint(equalTo: movieScoreView.centerYAnchor)
+            movieScore.topAnchor.constraint(equalTo: movieScoreView.topAnchor),
+            movieScore.bottomAnchor.constraint(equalTo: movieScoreView.bottomAnchor)
         ])
 
         movieScorePercentage.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             movieScorePercentage.leadingAnchor.constraint(equalTo: movieScore.trailingAnchor),
-            movieScorePercentage.centerYAnchor.constraint(equalTo: movieScore.centerYAnchor, constant: 2.7)
+            movieScorePercentage.topAnchor.constraint(equalTo: movieScoreView.topAnchor, constant: 5),
+            movieScorePercentage.bottomAnchor.constraint(equalTo: movieScoreView.bottomAnchor)
         ])
 
         movieScoreLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             movieScoreLabel.leadingAnchor.constraint(equalTo: movieScorePercentage.trailingAnchor, constant: 10),
-            movieScoreLabel.centerYAnchor.constraint(equalTo: movieScore.centerYAnchor)
+            movieScoreLabel.topAnchor.constraint(equalTo: movieScoreView.topAnchor),
+            movieScoreLabel.bottomAnchor.constraint(equalTo: movieScoreView.bottomAnchor)
         ])
 
         movieNameAndYearView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             movieNameAndYearView.leadingAnchor.constraint(equalTo: movieScoreView.leadingAnchor),
-            movieNameAndYearView.topAnchor.constraint(equalTo: movieScoreView.bottomAnchor, constant: 15)
+            movieNameAndYearView.trailingAnchor.constraint(equalTo: movieScoreView.trailingAnchor),
+            movieNameAndYearView.topAnchor.constraint(equalTo: movieScoreView.bottomAnchor, constant: 2)
         ])
 
         movieName.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            movieName.leadingAnchor.constraint(equalTo: movieNameAndYearView.leadingAnchor, constant: 20)
+            movieName.leadingAnchor.constraint(equalTo: movieNameAndYearView.leadingAnchor, constant: 20),
+            movieName.topAnchor.constraint(equalTo: movieNameAndYearView.topAnchor),
+            movieName.bottomAnchor.constraint(equalTo: movieNameAndYearView.bottomAnchor),
         ])
 
         movieYear.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            movieYear.leadingAnchor.constraint(equalTo: movieName.trailingAnchor, constant: 2)
+            movieYear.leadingAnchor.constraint(equalTo: movieName.trailingAnchor, constant: 2),
+            movieYear.topAnchor.constraint(equalTo: movieNameAndYearView.topAnchor),
+            movieYear.bottomAnchor.constraint(equalTo: movieNameAndYearView.bottomAnchor),
         ])
 
         movieDateAndPlaceView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             movieDateAndPlaceView.leadingAnchor.constraint(equalTo: movieNameAndYearView.leadingAnchor),
-            movieDateAndPlaceView.topAnchor.constraint(equalTo: movieNameAndYearView.bottomAnchor, constant: 30)
+            movieDateAndPlaceView.trailingAnchor.constraint(equalTo: movieNameAndYearView.trailingAnchor),
+            movieDateAndPlaceView.topAnchor.constraint(equalTo: movieNameAndYearView.bottomAnchor, constant: 2.5)
         ])
 
         movieDate.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            movieDate.leadingAnchor.constraint(equalTo: movieDateAndPlaceView.leadingAnchor, constant: 20)
+            movieDate.leadingAnchor.constraint(equalTo: movieDateAndPlaceView.leadingAnchor, constant: 20),
+            movieDate.topAnchor.constraint(equalTo: movieDateAndPlaceView.topAnchor),
+            movieDate.bottomAnchor.constraint(equalTo: movieDateAndPlaceView.bottomAnchor),
         ])
 
         moviePlace.translatesAutoresizingMaskIntoConstraints = false;
         NSLayoutConstraint.activate([
-            moviePlace.leadingAnchor.constraint(equalTo: movieDate.trailingAnchor, constant: 2)
+            moviePlace.leadingAnchor.constraint(equalTo: movieDate.trailingAnchor, constant: 2),
+            moviePlace.topAnchor.constraint(equalTo: movieDateAndPlaceView.topAnchor),
+            moviePlace.bottomAnchor.constraint(equalTo: movieDateAndPlaceView.bottomAnchor),
         ])
 
         movieGenreAndTimeView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             movieGenreAndTimeView.leadingAnchor.constraint(equalTo: movieDateAndPlaceView.leadingAnchor),
-            movieGenreAndTimeView.topAnchor.constraint(equalTo: movieDateAndPlaceView.bottomAnchor, constant: 20),
-            movieGenreAndTimeView.bottomAnchor.constraint(equalTo: favouriteView.topAnchor, constant: -25)
+            movieGenreAndTimeView.trailingAnchor.constraint(equalTo: movieDateAndPlaceView.trailingAnchor),
+            movieGenreAndTimeView.topAnchor.constraint(equalTo: movieDateAndPlaceView.bottomAnchor, constant: 2.5),
+            movieGenreAndTimeView.bottomAnchor.constraint(equalTo: favouriteView.topAnchor, constant: -15)
         ])
 
         movieGenre.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            movieGenre.leadingAnchor.constraint(equalTo: movieGenreAndTimeView.leadingAnchor, constant: 20)
+            movieGenre.leadingAnchor.constraint(equalTo: movieGenreAndTimeView.leadingAnchor, constant: 20),
+            movieGenre.topAnchor.constraint(equalTo: movieGenreAndTimeView.topAnchor),
+            movieGenre.bottomAnchor.constraint(equalTo: movieGenreAndTimeView.bottomAnchor),
+//            movieGenre.trailingAnchor.constraint(equalTo: movieGenreAndTimeView.trailingAnchor)
         ])
 
         movieTime.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            movieTime.leadingAnchor.constraint(equalTo: movieGenre.trailingAnchor, constant: 2)
+            movieTime.leadingAnchor.constraint(equalTo: movieGenre.trailingAnchor, constant: 2),
+            movieTime.topAnchor.constraint(equalTo: movieGenreAndTimeView.topAnchor),
+            movieTime.bottomAnchor.constraint(equalTo: movieGenreAndTimeView.bottomAnchor),
+            movieTime.trailingAnchor.constraint(equalTo: movieGenreAndTimeView.trailingAnchor)
         ])
         
         favouriteView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             favouriteView.leadingAnchor.constraint(equalTo: bannerView.leadingAnchor, constant: 20),
-            favouriteView.bottomAnchor.constraint(equalTo: bannerView.bottomAnchor, constant: -45)
+            favouriteView.heightAnchor.constraint(equalToConstant: 30),
+            favouriteView.widthAnchor.constraint(equalToConstant: 30),
+            favouriteView.bottomAnchor.constraint(equalTo: bannerView.bottomAnchor, constant: -15)
         ])
 
         vectorCircleView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             vectorCircleView.leadingAnchor.constraint(equalTo: favouriteView.leadingAnchor),
-            vectorCircleView.trailingAnchor.constraint(equalTo: favouriteView.leadingAnchor, constant: 30),
+            vectorCircleView.trailingAnchor.constraint(equalTo: favouriteView.trailingAnchor),
             vectorCircleView.topAnchor.constraint(equalTo: favouriteView.topAnchor),
-            vectorCircleView.bottomAnchor.constraint(equalTo: favouriteView.bottomAnchor, constant: 30),
+            vectorCircleView.bottomAnchor.constraint(equalTo: favouriteView.bottomAnchor),
             vectorCircleView.heightAnchor.constraint(equalToConstant: 30),
             vectorCircleView.widthAnchor.constraint(equalToConstant: 30)
         ])
